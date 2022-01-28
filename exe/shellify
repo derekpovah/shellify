@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'shellify'
+
+begin
+  Shellify::Cli.new.run
+rescue Interrupt
+  exit 1
+end
