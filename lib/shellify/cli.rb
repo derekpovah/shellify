@@ -19,6 +19,32 @@ module Shellify
       program :version, Shellify::VERSION
       program :description, 'Use Spotify from the command line'
 
+      command :configure do |c|
+        c.description = 'Set the Spotify client_id and client_secret'
+        c.action do
+          client_id = ask("Spotify Client ID: ")
+          client_secret = ask("Spotify Client Secret: ") { |q| q.echo = '*' }
+          @config.client_id = client_id
+          @config.client_secret = client_secret
+          @config.save!
+        end
+      end
+
+      command :authenticate do |c|
+        c.description = 'Authenticate with the Spotify API'
+        c.action do
+          spotify_username = ask('Your Spotify Username: ')
+          puts
+          puts 'Go to the link below to authorize Shellify.'
+          puts generate_oauth_url
+          oauth_credentials = Shellify::OauthCallbackHandler.run(@config)
+          @user.id = spotify_username
+          @user.token = oauth_credentials['access_token']
+          @user.refresh_token = oauth_credentials['refresh_token']
+          @user.save!
+        end
+      end
+
       command :devices do |c|
         c.description = 'List available playback devices'
         c.action do

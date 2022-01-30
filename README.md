@@ -14,25 +14,10 @@ $ gem install shellify
 
 #### Setup
 
-1. Create a Spotify application in the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard).
-1. Get your Spotify OAUTH `access_token` and `refresh_token`. (Shelilfy currently doesn't currently implement a two way OAUTH flow, but Spotify has [sample apps](https://github.com/spotify/web-api-auth-examples) that you can use  to get your initial keys. Shellify will handle exchanging refresh tokens for access tokens after initial setup.)
-1. Create two json files in `~/.config/shellify`
-    `config.json`
-    ```json
-    {
-      "client_id": "xxxxxxxxxxxxxxxx",
-      "client_secret": "xxxxxxxxxxxxxxx"
-    }
-    ```
-
-    `spotify_user.json`
-    ```json
-    {
-      "id": "spotify_user_id",
-      "token": "xxxxxxxxxxxxxxx",
-      "refresh_token": "xxxxxxxxxxxxxxx"
-    }
-    ```
+1. Create an application on the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard).
+1. Add `http://localhost:8888/callback` to the Spotify Application's Redirect URIs
+1. Run `shellify configure`
+1. Run `shellify authenticate`
 
 Commands
 --------

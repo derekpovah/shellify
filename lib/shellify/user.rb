@@ -2,48 +2,62 @@
 
 module Shellify
   class User < RSpotify::User
+    attr_accessor :token, :refresh_token, :id
 
     USER_FILE = '/spotify_user.json'
 
     def initialize(config_dir)
       @config_dir = config_dir
+      @user_file_path = config_dir + USER_FILE
       create_user_file
-      @spotify_user = load_persisted_user
+      write_default_user
+      load_persisted_user
       super({
         'credentials' => {
-          'token' => @spotify_user.token,
-          'refresh_token' => @spotify_user.refresh_token,
+          'token' => @token,
+          'refresh_token' => @refresh_token,
           'access_refresh_callback' => access_refresh_callback,
         },
-        'id' => @spotify_user.id,
+        'id' => @id,
       })
+    end
+
+    def configured?
+      !@token.empty? && !@refresh_token.empty? && !@id.empty?
+    end
+
+    def save!
+      File.open(@user_file_path, 'w') do |file|
+        file.write(JSON.pretty_generate({id: @id, token: @token, refresh_token: @refresh_token}))
+      end
     end
 
     private
 
     def load_persisted_user
-      OpenStruct.new(JSON.parse(File.read(@config_dir + USER_FILE)))
-    end
-
-    def persist_user(access_token)
-      @spotify_user.token = access_token
-
-      File.open(@config_dir + USER_FILE, 'w') do |file|
-        file.write(JSON.pretty_generate(@spotify_user.to_h))
-      end
+      JSON.parse(File.read(@user_file_path)).each_pair { |k,v| instance_variable_set("@#{k}", v) }
     end
 
     def access_refresh_callback
       Proc.new do |new_access_token, _token_lifetime|
-        persist_user(new_access_token)
+        @token = new_access_token
+        save!
       end
     end
 
     def create_user_file
-      return if File.exists?(@config_dir + USER_FILE)
+      return if File.exists?(@user_file_path)
 
-      FileUtils.mkdir_p(CONFIG_DIR)
-      FileUtils.touch(@config_dir + USER_FILE)
+      FileUtils.mkdir_p(@config_dir)
+      FileUtils.touch(@user_file_path)
+    end
+
+    def write_default_user
+      return unless File.zero?(@user_file_path)
+
+      File.open(@user_file_path, 'w') do |file|
+        file.write(JSON.pretty_generate({id: '', token: '', refresh_token: '',}))
+      end
     end
   end
 end

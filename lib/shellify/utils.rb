@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'time'
+require 'uri'
 
 module Shellify
   module Utils
@@ -14,6 +15,17 @@ module Shellify
 
     def time_to_ms(time)
       time.split(':').map { |a| a.to_i }.inject(0) { |a, b| a * 60 + b} * 1000
+    end
+
+    def generate_oauth_url
+      url_params = {
+        response_type: 'code',
+        client_id: @config.client_id,
+        scope: Shellify::Config::SPOTIFY_AUTHORIZATION_SCOPES,
+        redirect_uri: 'http://localhost:8888/callback',
+      }
+
+      "https://accounts.spotify.com/authorize?#{URI.encode_www_form(url_params)}"
     end
   end
 end
