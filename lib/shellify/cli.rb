@@ -74,14 +74,16 @@ module Shellify
       command :like do |c|
         c.description = 'Save the current song to your library'
         c.action do
-          @user.save_tracks!([@user.player.currently_playing])
+          exit_with_message(local_track_message, 0) if track_is_local?(playing)
+          @user.save_tracks!([playing])
         end
       end
 
       command :unlike do |c|
         c.description = 'Remove the current song from your library'
         c.action do
-          @user.remove_tracks!([@user.player.currently_playing])
+          exit_with_message(local_track_message, 0) if track_is_local?(playing)
+          @user.remove_tracks!([playing])
         end
       end
 
@@ -99,10 +101,11 @@ module Shellify
         c.action do |args, options|
           return puts "  Nothing playing" unless @user.player.playing?
 
+          exit_with_message(local_track_message, 0) if track_is_local?(playing)
           playlist = @user.playlists.find { |p| p.name == args[0] }
           return puts "  Playlist not found" unless playlist
 
-          playlist.add_tracks!([@user.player.currently_playing])
+          playlist.add_tracks!([playing])
         end
       end
 
@@ -111,10 +114,11 @@ module Shellify
         c.action do |args, options|
           return puts "  Nothing playing" unless @user.player.playing?
 
+          exit_with_message(local_track_message, 0) if track_is_local?(playing)
           playlist = @user.playlists.find { |p| p.name == args[0] }
           return puts "  Playlist not found" unless playlist
 
-          playlist.remove_tracks!([@user.player.currently_playing])
+          playlist.remove_tracks!([playing])
         end
       end
 
@@ -176,12 +180,25 @@ module Shellify
 
     private
 
+    def playing
+      @user.player.currently_playing
+    end
+
+    def local_track_message
+      "  Shellify can't perform this action for local tracks"
+    end
+
+    def track_is_local?(track)
+      track.uri.split(':')[1] == 'local'
+    end
+
     def print_current_song
-      playing = @user.player.currently_playing
       puts '  Now Playing:'
       puts "  #{playing.name} - #{playing.artists.first.name} - "\
            "#{duration_to_s(@user.player.progress)}/#{duration_to_s(playing.duration_ms)}"\
-           "#{" - ♥" if @user.saved_tracks?([playing]).first}"
+           "#{" - ♥" if !track_is_local?(playing) && @user.saved_tracks?([playing]).first}"\
+           "#{" - local" if track_is_local?(playing)}"
+
     end
 
     def exit_with_message(message, code = 1)
