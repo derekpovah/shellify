@@ -104,7 +104,7 @@ module Shellify
           exit_with_message(local_track_message, 0) if track_is_local?(playing)
           playlist = @user.playlists.find { |p| p.name == args[0] }
           return puts "  Playlist not found" unless playlist
-          exit_with_message(add_to_collaborative_playlist_message, 0) if playlist.owner != @user
+          exit_with_message(add_to_collaborative_playlist_message, 0) if playlist.owner.id != @user.id
 
           playlist.add_tracks!([playing])
         end
@@ -118,7 +118,7 @@ module Shellify
           exit_with_message(local_track_message, 0) if track_is_local?(playing)
           playlist = @user.playlists.find { |p| p.name == args[0] }
           return puts "  Playlist not found" unless playlist
-          exit_with_message(add_to_collaborative_playlist_message, 0) if playlist.owner != @user
+          exit_with_message(add_to_collaborative_playlist_message, 0) if playlist.owner.id != @user.id
 
           playlist.remove_tracks!([playing])
         end
