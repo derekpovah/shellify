@@ -97,7 +97,8 @@ module Shellify
       end
 
       command :add do |c|
-        c.description = 'Add the current song to the provided playlist'
+        c.description = 'Add the current song or album to the provided playlist'
+        c.option '-a', '--album'
         c.action do |args, options|
           return puts "  Nothing playing" unless @user.player.playing?
 
@@ -106,12 +107,14 @@ module Shellify
           return puts "  Playlist not found" unless playlist
           exit_with_message(add_to_collaborative_playlist_message, 0) if playlist.owner.id != @user.id
 
-          playlist.add_tracks!([playing])
+          item = options.album ? playing.album.tracks : [playing]
+          playlist.add_tracks!(item)
         end
       end
 
       command :remove do |c|
-        c.description = 'Remove the currently playing song from the provided playlist'
+        c.description = 'Remove the currently playing song or album from the provided playlist'
+        c.option '-a', '--album'
         c.action do |args, options|
           return puts "  Nothing playing" unless @user.player.playing?
 
@@ -120,7 +123,8 @@ module Shellify
           return puts "  Playlist not found" unless playlist
           exit_with_message(add_to_collaborative_playlist_message, 0) if playlist.owner.id != @user.id
 
-          playlist.remove_tracks!([playing])
+          item = options.album ? playing.album.tracks : [playing]
+          playlist.remove_tracks!(item)
         end
       end
 
