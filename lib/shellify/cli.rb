@@ -123,7 +123,8 @@ module Shellify
             when 'episode'
               puts "  #{i.to_s.rjust(items.size.to_s.size, ' ')} - #{item.name} - #{item.show.name}"
             when 'track'
-              puts "  #{i.to_s.rjust(items.size.to_s.size, ' ')} - #{item.name} - #{item.artists.first.name}"
+              puts "  #{i.to_s.rjust(items.size.to_s.size, ' ')} - #{item.name} - "\
+                   "#{item.artists.map(&:name).join(', ')}"
             end
           end
         end
@@ -224,7 +225,7 @@ module Shellify
            "#{' - local' if track_is_local?(playing)}\n"\
            "  #{playing.name}\n"\
            "  #{playing.album.name}\n"\
-           "  #{playing.artists.first.name}"
+           "  #{playing.artists.map(&:name).join(', ')}"
     end
 
     def print_currently_playing
