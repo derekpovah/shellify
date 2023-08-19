@@ -66,7 +66,7 @@ module Shellify
 
       command :volume do |c|
         c.description = 'Set the volume of the current playback device'
-        c.action do |args, options|
+        c.action do |args, _options|
           @user.player.volume(args[0])
         end
       end
@@ -170,7 +170,7 @@ module Shellify
 
       command :seek do |c|
         c.description = 'Seek to the specified time in the current song'
-        c.action do |args, option|
+        c.action do |args, _option|
           @user.player.seek(time_to_ms(args[0]))
           print_current_song
         end
