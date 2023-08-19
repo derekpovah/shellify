@@ -39,7 +39,7 @@ module Shellify
     end
 
     def access_refresh_callback
-      Proc.new do |new_access_token, _token_lifetime|
+      proc do |new_access_token, _token_lifetime|
         @token = new_access_token
         save!
       end
