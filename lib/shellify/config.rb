@@ -38,7 +38,7 @@ module Shellify
     private
 
     def load_config
-      return unless File.exists?(CONFIG_FILE)
+      return unless File.exist?(CONFIG_FILE)
 
       JSON.parse(File.read(CONFIG_FILE)).each_pair { |k, v| instance_variable_set("@#{k}", v) }
     end

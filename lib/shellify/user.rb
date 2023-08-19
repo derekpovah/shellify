@@ -46,7 +46,7 @@ module Shellify
     end
 
     def create_user_file
-      return if File.exists?(@user_file_path)
+      return if File.exist?(@user_file_path)
 
       FileUtils.mkdir_p(@config_dir)
       FileUtils.touch(@user_file_path)
