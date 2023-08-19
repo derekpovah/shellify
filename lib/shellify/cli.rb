@@ -133,16 +133,14 @@ module Shellify
       command :play do |c|
         c.description = 'Play or Pause on the currently playing device'
         c.action do
-          begin
-            if @user.player.playing?
-              @user.player.pause
-            else
-              @user.player.play
-              print_current_song
-            end
-          rescue RestClient::NotFound
-            @user.player.play(@user.devices.first.id)
+          if @user.player.playing?
+            @user.player.pause
+          else
+            @user.player.play
+            print_current_song
           end
+        rescue RestClient::NotFound
+          @user.player.play(@user.devices.first.id)
         end
       end
 
