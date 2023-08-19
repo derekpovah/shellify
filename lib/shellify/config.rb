@@ -31,7 +31,7 @@ module Shellify
 
     def save!
       File.open(CONFIG_FILE, 'w') do |file|
-        file.write(JSON.pretty_generate({client_id: @client_id, client_secret: @client_secret}))
+        file.write(JSON.pretty_generate({ client_id: @client_id, client_secret: @client_secret }))
       end
     end
 
@@ -40,7 +40,7 @@ module Shellify
     def load_config
       return unless File.exists?(CONFIG_FILE)
 
-      JSON.parse(File.read(CONFIG_FILE)).each_pair { |k,v| instance_variable_set("@#{k}", v) }
+      JSON.parse(File.read(CONFIG_FILE)).each_pair { |k, v| instance_variable_set("@#{k}", v) }
     end
   end
 end

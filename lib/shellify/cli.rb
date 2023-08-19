@@ -195,7 +195,7 @@ module Shellify
     end
 
     def add_to_collaborative_playlist_message
-      " Shellify can't perform this action for collaborative playlists you don't own"
+      "  Shellify can't perform this action for collaborative playlists you don't own"
     end
 
     def track_is_local?(track)

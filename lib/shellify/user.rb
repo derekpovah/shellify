@@ -28,14 +28,14 @@ module Shellify
 
     def save!
       File.open(@user_file_path, 'w') do |file|
-        file.write(JSON.pretty_generate({id: @id, token: @token, refresh_token: @refresh_token}))
+        file.write(JSON.pretty_generate({ id: @id, token: @token, refresh_token: @refresh_token }))
       end
     end
 
     private
 
     def load_persisted_user
-      JSON.parse(File.read(@user_file_path)).each_pair { |k,v| instance_variable_set("@#{k}", v) }
+      JSON.parse(File.read(@user_file_path)).each_pair { |k, v| instance_variable_set("@#{k}", v) }
     end
 
     def access_refresh_callback
@@ -56,7 +56,7 @@ module Shellify
       return unless File.zero?(@user_file_path)
 
       File.open(@user_file_path, 'w') do |file|
-        file.write(JSON.pretty_generate({id: '', token: '', refresh_token: '',}))
+        file.write(JSON.pretty_generate({ id: '', token: '', refresh_token: '' }))
       end
     end
   end
