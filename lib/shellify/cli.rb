@@ -113,6 +113,22 @@ module Shellify
         end
       end
 
+      command :queue do |c|
+        c.description = 'List the next songs in the queue'
+        c.action do
+          items = @user.player.next_up
+          exit_with_message('  Nothing in the queue', 0) if items.empty?
+          items.each.with_index(1) do |item, i|
+            case item.type
+            when 'episode'
+              puts "  #{i.to_s.rjust(items.size.to_s.size, ' ')} - #{item.name} - #{item.show.name}"
+            when 'track'
+              puts "  #{i.to_s.rjust(items.size.to_s.size, ' ')} - #{item.name} - #{item.artists.first.name}"
+            end
+          end
+        end
+      end
+
       command :remove do |c|
         c.description = 'Remove the currently playing song or album from the provided playlist'
         c.option '-a', '--album'

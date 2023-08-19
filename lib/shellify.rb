@@ -3,6 +3,7 @@
 require 'fileutils'
 require 'json'
 require 'rspotify'
+require 'shellify/rspotify_patch'
 require 'shellify/version'
 
 module Shellify
