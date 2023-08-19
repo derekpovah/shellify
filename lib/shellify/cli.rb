@@ -60,7 +60,7 @@ module Shellify
         c.action do
           return puts '  Nothing playing' unless @user.player.playing?
 
-          print_current_song
+          print_currently_playing
         end
       end
 
@@ -153,7 +153,7 @@ module Shellify
             @user.player.pause
           else
             @user.player.play
-            print_current_song
+            print_currently_playing
           end
         rescue RestClient::NotFound
           @user.player.play(@user.devices.first.id)
@@ -164,7 +164,7 @@ module Shellify
         c.description = 'Skip to the next song in the queue'
         c.action do
           @user.player.next
-          print_current_song
+          print_currently_playing
         end
       end
 
@@ -172,7 +172,7 @@ module Shellify
         c.description = 'Skip the the previous song in the queue'
         c.action do
           @user.player.previous
-          print_current_song
+          print_currently_playing
         end
       end
 
@@ -180,7 +180,7 @@ module Shellify
         c.description = 'Restart the currently playing song'
         c.action do
           @user.player.seek 0
-          print_current_song
+          print_currently_playing
         end
       end
 
@@ -188,7 +188,7 @@ module Shellify
         c.description = 'Seek to the specified time in the current song'
         c.action do |args, _option|
           @user.player.seek(time_to_ms(args[0]))
-          print_current_song
+          print_currently_playing
         end
       end
 
@@ -218,13 +218,21 @@ module Shellify
       track.uri.split(':')[1] == 'local'
     end
 
-    def print_current_song
-      puts '  Now Playing:'
-      puts "  #{playing.name} - #{playing.artists.first.name} - "\
-           "#{duration_to_s(@user.player.progress)}/#{duration_to_s(playing.duration_ms)}"\
-           "#{" - ♥" if !track_is_local?(playing) && @user.saved_tracks?([playing]).first}"\
-           "#{" - local" if track_is_local?(playing)}"
+    def current_song
+      puts "Now Playing - #{duration_to_s(@user.player.progress)}/#{duration_to_s(playing.duration_ms)}"\
+           "#{' - ♥' if !track_is_local?(playing) && @user.saved_tracks?([playing]).first}"\
+           "#{' - local' if track_is_local?(playing)}\n"\
+           "  #{playing.name}\n"\
+           "  #{playing.album.name}\n"\
+           "  #{playing.artists.first.name}"
+    end
 
+    def print_currently_playing
+      if playing.nil?
+        puts "Now Playing - Podcast - #{duration_to_s(@user.player.progress)}"
+      else
+        current_song
+      end
     end
 
     def exit_with_message(message, code = 1)
