@@ -4,8 +4,8 @@ module Shellify
   class Config
     attr_accessor :client_id, :client_secret, :config_dir
 
-    CONFIG_DIR = ENV['HOME'] + '/.config/shellify'
-    CONFIG_FILE = CONFIG_DIR + '/config.json'
+    CONFIG_DIR = "#{ENV['HOME']}/.config/shellify"
+    CONFIG_FILE = "#{CONFIG_DIR}/config.json"
     SPOTIFY_AUTHORIZATION_SCOPES = %w[
       user-read-playback-state
       user-modify-playback-state

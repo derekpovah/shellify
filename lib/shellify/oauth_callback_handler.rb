@@ -25,7 +25,7 @@ module Shellify
       begin
         tokens = fetch_tokens(params['code'])
       rescue RestClient::Exception => e
-        body = "Spotify didn't like that\n" + e.response
+        body = "Spotify didn't like that\n#{e.response}"
       end
 
       @client.puts headers(body.length)
