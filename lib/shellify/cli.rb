@@ -22,8 +22,8 @@ module Shellify
       command :configure do |c|
         c.description = 'Set the Spotify client_id and client_secret'
         c.action do
-          client_id = ask("Spotify Client ID: ")
-          client_secret = ask("Spotify Client Secret: ") { |q| q.echo = '*' }
+          client_id = ask('Spotify Client ID: ')
+          client_secret = ask('Spotify Client Secret: ') { |q| q.echo = '*' }
           @config.client_id = client_id
           @config.client_secret = client_secret
           @config.save!
@@ -58,7 +58,7 @@ module Shellify
       command :playing do |c|
         c.description = 'List information about the current song'
         c.action do
-          return puts "  Nothing playing" unless @user.player.playing?
+          return puts '  Nothing playing' unless @user.player.playing?
 
           print_current_song
         end
@@ -91,7 +91,7 @@ module Shellify
         c.description = 'List your playlists'
         c.action do
           @user.playlists.each do |playlist|
-            puts "  #{playlist.name} - #{playlist.owner.display_name}#{" - Collaborative" if playlist.collaborative}"
+            puts "  #{playlist.name} - #{playlist.owner.display_name}#{' - Collaborative' if playlist.collaborative}"
           end
         end
       end
@@ -100,11 +100,12 @@ module Shellify
         c.description = 'Add the current song or album to the provided playlist'
         c.option '-a', '--album'
         c.action do |args, options|
-          return puts "  Nothing playing" unless @user.player.playing?
+          return puts '  Nothing playing' unless @user.player.playing?
 
           exit_with_message(local_track_message, 0) if track_is_local?(playing)
           playlist = @user.playlists.find { |p| p.name == args[0] }
-          return puts "  Playlist not found" unless playlist
+          return puts '  Playlist not found' unless playlist
+
           exit_with_message(add_to_collaborative_playlist_message, 0) if playlist.owner.id != @user.id
 
           item = options.album ? playing.album.tracks : [playing]
@@ -116,11 +117,12 @@ module Shellify
         c.description = 'Remove the currently playing song or album from the provided playlist'
         c.option '-a', '--album'
         c.action do |args, options|
-          return puts "  Nothing playing" unless @user.player.playing?
+          return puts '  Nothing playing' unless @user.player.playing?
 
           exit_with_message(local_track_message, 0) if track_is_local?(playing)
           playlist = @user.playlists.find { |p| p.name == args[0] }
-          return puts "  Playlist not found" unless playlist
+          return puts '  Playlist not found' unless playlist
+
           exit_with_message(add_to_collaborative_playlist_message, 0) if playlist.owner.id != @user.id
 
           item = options.album ? playing.album.tracks : [playing]

@@ -41,7 +41,7 @@ module Shellify
     def headers(content_length)
       [
         'HTTP/1.1 200 Ok',
-        "date: #{Time.now.utc.strftime("%a, %d %b %Y %H:%M:%S GMT")}",
+        "date: #{Time.now.utc.strftime('%a, %d %b %Y %H:%M:%S GMT')}",
         'server: ruby',
         "Content-Length: #{content_length}",
         '',
@@ -51,7 +51,7 @@ module Shellify
 
     def fetch_tokens(code)
       headers = {
-        'Authorization': "Basic " + Base64.strict_encode64("#{@config.client_id}:#{@config.client_secret}"),
+        'Authorization': 'Basic ' + Base64.strict_encode64("#{@config.client_id}:#{@config.client_secret}"),
       }
 
       params = {
@@ -62,7 +62,7 @@ module Shellify
         code: code,
       }
 
-      JSON.parse(RestClient.post("https://accounts.spotify.com/api/token", params, headers))
+      JSON.parse(RestClient.post('https://accounts.spotify.com/api/token', params, headers))
     end
   end
 end
