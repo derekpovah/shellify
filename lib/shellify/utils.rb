@@ -14,7 +14,7 @@ module Shellify
     end
 
     def time_to_ms(time)
-      time.split(':').map { |a| a.to_i }.inject(0) { |a, b| a * 60 + b} * 1000
+      time.split(':').map(&:to_i).inject(0) { |a, b| a * 60 + b } * 1000
     end
 
     def generate_oauth_url
